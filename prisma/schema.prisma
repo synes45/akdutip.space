@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Committee {
+  id        String   @id @default(cuid())
+  title     String   // Örn: 1. KOMİTE
+  subtitle  String   // Örn: Tıbbi Bilimlere Giriş
+  bgImage   String?  // Arka plan resmi URL (Opsiyonel)
+  lessons   Lesson[]
+  createdAt DateTime @default(now())
+}
+
+model Lesson {
+  id          String    @id @default(cuid())
+  name        String    // Örn: Anatomi
+  committeeId String
+  committee   Committee @relation(fields: [committeeId], references: [id], onDelete: Cascade)
+  videos      Video[]
+  createdAt   DateTime  @default(now())
+}
+
+model Video {
+  id         String   @id @default(cuid())
+  title      String
+  telegramId String
+  pdfUrl     String?  // 📄 PDF Notu Desteği
+  order      Int      @default(0) // ↕️ Sıralama Desteği
+  lessonId   String
+  lesson     Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+}
+
+model ExamEvent {
+  id        String   @id @default(cuid())
+  title     String
+  committee String
+  date      String   // YYYY-MM-DD formatında
+  type      String   // komite | pratik | final | etkinlik
+  time      String?
+  location  String?
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // 🔑 Haşlenmiş şifre (Yeni eklendi)
+  name      String?
+  role      String   @default("STUDENT") // "STUDENT" veya "ADMIN"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationCode {
+  id        String   @id @default(cuid())
+  email     String
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}

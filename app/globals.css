@@ -1,5 +1,32 @@
 @import "tailwindcss";
 
+/* Chrome, Safari ve Chromium tarayıcılarda native üç nokta menüsünü gizler */
+video::-webkit-media-controls-overflow-button {
+  display: none !important;
+}
+
+/* Indir butonunu kesin olarak gizler */
+video::-internal-media-controls-download-button {
+  display: none !important;
+}
+
+/* globals.css içine eklenebilir */
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+html {
+  -ms-overflow-style: none;  /* IE ve Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* globals.css */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -24,3 +51,5 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
