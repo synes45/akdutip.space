@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { TelegramClient, Api } from "telegram";
+import { TelegramClient } from "telegram";
 import { StringSession } from "telegram/sessions";
 import bigInt from "big-integer";
 
@@ -19,6 +19,9 @@ async function getTelegramClient() {
   return clientInstance;
 }
 
+// Telegram MTProto için zorunlu hizalama bloğu (128 KB)
+const TELEGRAM_BLOCK_SIZE = 128 * 1024;
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const chatId = searchParams.get("chatId");
@@ -37,10 +40,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Video bulunamadı" }, { status: 404 });
     }
 
-    const range = request.headers.get("range");
     const media = message.media as any;
     const fileSize = media.document?.size || 0;
-    const chunkSize = 512 * 1024; // 512 KB parçalar
+    const range = request.headers.get("range");
 
     // Range başlığı yoksa tüm dosyayı gönder
     if (!range || !fileSize) {
@@ -49,7 +51,7 @@ export async function GET(request: NextRequest) {
           try {
             for await (const chunk of client.iterDownload({
               file: message.media,
-              requestSize: chunkSize,
+              requestSize: TELEGRAM_BLOCK_SIZE,
             })) {
               controller.enqueue(chunk);
             }
@@ -65,26 +67,41 @@ export async function GET(request: NextRequest) {
           "Content-Type": "video/mp4",
           "Accept-Ranges": "bytes",
           "Content-Length": fileSize.toString(),
+          "Cache-Control": "no-cache, no-store, must-revalidate",
         },
       });
     }
 
-    // Range başlığı varsa istenen parçayı Telegram'dan çek (Seeking Desteği)
+    // Range parsing
     const parts = range.replace(/bytes=/, "").split("-");
-    const start = parseInt(parts[0], 10);
-    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-    const chunksize = end - start + 1;
+    const rawStart = parseInt(parts[0], 10);
+    const rawEnd = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+
+    // Telegram gereksinimi: Offset 128 KB'ın katı olmak zordadır
+    const alignedStart = Math.floor(rawStart / TELEGRAM_BLOCK_SIZE) * TELEGRAM_BLOCK_SIZE;
+    const skipBytes = rawStart - alignedStart; // İstenecek gerçek veri için kırpılacak miktar
+    const limitSize = (rawEnd - alignedStart) + 1;
+
+    let bytesStreamed = 0;
 
     const stream = new ReadableStream({
       async start(controller) {
         try {
           for await (const chunk of client.iterDownload({
             file: message.media,
-            offset: bigInt(start) as any, // GramJS BigInteger tip dönüşümü
-            limit: chunksize,
-            requestSize: chunkSize,
+            offset: bigInt(alignedStart) as any,
+            limit: limitSize,
+            requestSize: TELEGRAM_BLOCK_SIZE,
           })) {
-            controller.enqueue(chunk);
+            let buffer = chunk;
+
+            // Eğer offset hizalamasından dolayı ilk blokta fazla veri geldiyse kırp
+            if (bytesStreamed === 0 && skipBytes > 0) {
+              buffer = buffer.subarray(skipBytes);
+            }
+
+            controller.enqueue(buffer);
+            bytesStreamed += buffer.length;
           }
           controller.close();
         } catch (err) {
@@ -93,13 +110,16 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    const contentLength = rawEnd - rawStart + 1;
+
     return new NextResponse(stream, {
       status: 206,
       headers: {
-        "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+        "Content-Range": `bytes ${rawStart}-${rawEnd}/${fileSize}`,
         "Accept-Ranges": "bytes",
-        "Content-Length": chunksize.toString(),
+        "Content-Length": contentLength.toString(),
         "Content-Type": "video/mp4",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
       },
     });
   } catch (error) {

@@ -40,7 +40,8 @@ export default function Home() {
         <Header />
 
         <main className="w-full pb-20">
-          <HeroBanner />
+          {/* Seçili komiteyi HeroBanner'a aktardık */}
+          <HeroBanner selectedCommittee={currentCommittee} />
 
           {/* max-w-7xl kaldırıldı, genişletilmiş padding (px-4 sm:px-8) ile uçlara yanaştırıldı */}
           <div className="w-full px-4 sm:px-8 space-y-12 mt-8">

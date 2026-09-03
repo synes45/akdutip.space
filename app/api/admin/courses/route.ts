@@ -9,7 +9,7 @@ export async function GET() {
         lessons: {
           include: {
             videos: {
-              orderBy: { order: "asc" }, // Videoları sıra numarasına göre getir
+              orderBy: { order: "asc" },
             },
           },
         },
@@ -46,7 +46,6 @@ export async function POST(req: Request) {
 
     // 3. VİDEO & PDF EKLE
     if (type === "video") {
-      // Dersetki son video sırasını bul
       const lastVideo = await prisma.video.findFirst({
         where: { lessonId },
         orderBy: { order: "desc" },
@@ -71,26 +70,49 @@ export async function POST(req: Request) {
   }
 }
 
-// Güncelleme İşlemi (Videolar İçin Edit)
+// Güncelleme İşlemleri (Video ve Komite Düzenleme)
 export async function PUT(req: Request) {
   try {
     const body = await req.json();
-    const { videoId, videoTitle, telegramId, pdfUrl } = body;
+    const { type, committeeId, title, subtitle, bgImage, videoId, videoTitle, telegramId, pdfUrl } = body;
 
-    if (!videoId) {
-      return NextResponse.json({ error: "Video ID gerekli" }, { status: 400 });
+    // 1. KOMİTE DÜZENLEME
+    if (type === "committee") {
+      if (!committeeId) {
+        return NextResponse.json({ error: "Komite ID gerekli" }, { status: 400 });
+      }
+
+      const updatedCommittee = await prisma.committee.update({
+        where: { id: committeeId },
+        data: {
+          title,
+          subtitle,
+          bgImage: bgImage || null,
+        },
+      });
+
+      return NextResponse.json(updatedCommittee);
     }
 
-    const updatedVideo = await prisma.video.update({
-      where: { id: videoId },
-      data: {
-        title: videoTitle,
-        telegramId,
-        pdfUrl: pdfUrl || null,
-      },
-    });
+    // 2. VİDEO DÜZENLEME
+    if (type === "video" || videoId) {
+      if (!videoId) {
+        return NextResponse.json({ error: "Video ID gerekli" }, { status: 400 });
+      }
 
-    return NextResponse.json(updatedVideo);
+      const updatedVideo = await prisma.video.update({
+        where: { id: videoId },
+        data: {
+          title: videoTitle,
+          telegramId,
+          pdfUrl: pdfUrl || null,
+        },
+      });
+
+      return NextResponse.json(updatedVideo);
+    }
+
+    return NextResponse.json({ error: "Geçersiz güncelleme türü" }, { status: 400 });
   } catch (error) {
     return NextResponse.json({ error: "Güncelleme başarısız" }, { status: 500 });
   }
