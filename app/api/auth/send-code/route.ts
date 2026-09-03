@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 🔴 2. Zaten Kayıtlı Mı Kontrolü (Aynı Maille Tekrar Kaydı Engelleme)
+    // 🔴 2. Zaten Kayıtlı Mı Kontrolü
     const existingUser = await prisma.user.findUnique({
       where: { email: cleanEmail },
     });
@@ -66,9 +66,9 @@ export async function POST(req: Request) {
     console.log(`🔑 [TEST OTP KODU]: ${cleanEmail} -> ${code}`);
     console.log(`========================================\n`);
 
-    // 5. Resend İle Mail Gönderme
+    // 5. Resend İle Kendi Domaininden Mail Gönderme
     const { error } = await resend.emails.send({
-      from: "Akdeniz Tıp Portal <onboarding@resend.dev>",
+      from: "Akdeniz Tıp Portal <kayit@akdutip.space>",
       to: [cleanEmail],
       subject: `${code} - Akdeniz Tıp Portal Kayıt Kodunuz`,
       html: `
@@ -78,12 +78,17 @@ export async function POST(req: Request) {
           <div style="background-color: #171717; border: 1px solid #404040; border-radius: 8px; padding: 16px; text-align: center; margin: 24px 0;">
             <span style="font-size: 32px; font-weight: bold; letter-spacing: 6px; color: #ffffff;">${code}</span>
           </div>
+          <p style="color: #737373; font-size: 12px; text-align: center;">Bu doğrulama kodu 10 dakika boyunca geçerlidir.</p>
         </div>
       `,
     });
 
     if (error) {
-      console.warn("Resend Uyarısı (Domain doğrulanmadığı için mail gitmedi, terminaldeki kodu kullanabilirsiniz):", error.message);
+      console.error("Resend Gönderim Hatası:", error.message);
+      return NextResponse.json(
+        { error: "E-posta gönderilirken bir sorun oluştu. Lütfen tekrar deneyin." },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ success: true, message: "Doğrulama kodu e-postanıza gönderildi." });

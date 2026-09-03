@@ -26,9 +26,6 @@ export default function Footer() {
             <Link href="/dersler" className="hover:text-zinc-200 transition-colors">
               Ders Arşivi
             </Link>
-            <Link href="/admin" className="hover:text-amber-400 transition-colors">
-              Admin
-            </Link>
           </div>
         </div>
 
