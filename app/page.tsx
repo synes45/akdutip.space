@@ -8,15 +8,12 @@ import VideoGrid from "./components/VideoGrid";
 import Footer from "./components/Footer";
 import { Committee } from "./data/courses";
 
-
-
 export default function Home() {
   const [committees, setCommittees] = useState<Committee[]>([]);
   const [selectedCommittee, setSelectedCommittee] = useState<Committee | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Veritabanından (API üzerinden) komiteleri ve dersleri çekiyoruz
   useEffect(() => {
     async function fetchCommittees() {
       try {
@@ -38,18 +35,19 @@ export default function Home() {
   const currentCommittee = selectedCommittee || committees[0];
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white font-sans selection:bg-blue-600 selection:text-white flex flex-col justify-between">
-      <div>
+    <div className="min-h-screen bg-zinc-950 text-white font-sans selection:bg-amber-500 selection:text-black flex flex-col justify-between">
+      <div className="w-full">
         <Header />
 
-        <main className="pb-20">
+        <main className="w-full pb-20">
           <HeroBanner />
 
-          <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 space-y-12 pt-6 relative z-30">
+          {/* max-w-7xl kaldırıldı, genişletilmiş padding (px-4 sm:px-8) ile uçlara yanaştırıldı */}
+          <div className="w-full px-4 sm:px-8 space-y-12 mt-8">
             {loading ? (
-              <div className="p-10 text-center text-yellow-400 font-bold">Veriler Yükleniyor...</div>
+              <div className="p-10 text-center text-amber-400 font-bold">Veriler Yükleniyor...</div>
             ) : committees.length === 0 ? (
-              <div className="p-10 text-center text-neutral-400 border border-dashed border-neutral-800 rounded-2xl">
+              <div className="p-10 text-center text-zinc-400 border border-dashed border-zinc-800 rounded-2xl">
                 Henüz veritabanına komite eklenmemiş. Admin panelinden ekleyebilirsin.
               </div>
             ) : (
@@ -76,7 +74,6 @@ export default function Home() {
         </main>
       </div>
 
-      {/* Modern Footer */}
       <Footer />
     </div>
   );

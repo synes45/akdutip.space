@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import AuthModal from "./AuthModal";
 
-interface User {
+interface UserType {
   id: string;
   email: string;
   role: string;
@@ -14,10 +14,10 @@ interface User {
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Scroll Dinleyici
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -27,7 +27,6 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Kullanıcı Oturum Kontrolü
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -46,7 +45,6 @@ export default function Header() {
     checkAuth();
   }, []);
 
-  // Çıkış Yap
   const handleLogout = async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
@@ -60,121 +58,94 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4 outline-none select-none ${
+        className={`fixed top-0 inset-x-0 z-50 w-full transition-all duration-300 ease-in-out select-none ${
           isScrolled
-            ? "bg-neutral-950/80 backdrop-blur-md border-b border-neutral-800/80 py-3 shadow-lg shadow-black/40"
-            : "bg-transparent border-b border-transparent py-5"
+            ? "bg-zinc-950/40 backdrop-blur-xl border-b border-white/5 py-3 shadow-sm"
+            : "bg-transparent border-b border-transparent py-4"
         }`}
       >
-        <div className="max-w-[1200px] mx-auto flex items-center justify-between">
-          
-          {/* Sol Logo */}
-          <Link href="/" className="flex items-center gap-3 group outline-none">
-            <div className="w-9 h-9 bg-yellow-500 rounded-xl flex items-center justify-center font-black text-black text-lg shadow-md shadow-yellow-500/20 group-hover:scale-105 transition-transform">
-              A
-            </div>
-            <span className="text-lg font-extrabold tracking-tight text-white">
-              Akdeniz <span className="text-yellow-400">Tıp</span>
-            </span>
-          </Link>
+        <div className="w-full px-4 sm:px-8 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-8">
+            <Link href="/" className="flex items-center gap-2 group outline-none">
+              <span className="text-lg font-bold tracking-tight text-zinc-100 uppercase group-hover:text-amber-400 transition-colors">
+                AKDENİZ <span className="text-zinc-400 font-normal">TIP</span>
+              </span>
+            </Link>
 
-          {/* Orta Navigasyon */}
-          <nav className="hidden md:flex items-center gap-1.5 bg-neutral-900/80 backdrop-blur-md border border-neutral-800/80 px-2.5 py-1.5 rounded-full shadow-lg">
-            <Link href="/" className="px-4 py-1.5 rounded-full text-sm font-semibold text-white bg-neutral-800 transition-all">
-              Ana Sayfa
-            </Link>
-            <Link href="#committees" className="px-4 py-1.5 rounded-full text-sm font-medium text-neutral-400 hover:text-white transition-all">
-              Komiteler
-            </Link>
-            <Link href="/dersler" className="px-4 py-1.5 rounded-full text-sm font-medium text-neutral-400 hover:text-white transition-all">
-              Ders Arşivi
-            </Link>
-            <Link href="/takvim" className="px-4 py-1.5 rounded-full text-sm font-medium text-neutral-400 hover:text-white transition-all">
-              Takvim
-            </Link>
-          </nav>
+            <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+              <Link href="/" className="text-zinc-100 hover:text-white transition-colors">Ana Sayfa</Link>
+              <Link href="#committees" className="text-zinc-400 hover:text-zinc-200 transition-colors">Komiteler</Link>
+              <Link href="/dersler" className="text-zinc-400 hover:text-zinc-200 transition-colors">Ders Arşivi</Link>
+              <Link href="/takvim" className="text-zinc-400 hover:text-zinc-200 transition-colors">Takvim</Link>
+              <Link href="/akis" className="text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1.5 font-semibold">
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                Akış Modu
+              </Link>
+            </nav>
+          </div>
 
-          {/* Sağ Alan: Kullanıcı Durumu / Giriş & Çıkış */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <button aria-label="Bildirimler" className="p-2 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60 rounded-full hidden sm:flex transition cursor-pointer backdrop-blur-sm">
+              <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+            </button>
+
             {loading ? (
-              <div className="h-9 w-28 bg-neutral-900 animate-pulse rounded-full border border-neutral-800" />
+              <div className="h-9 w-24 bg-zinc-900/60 animate-pulse rounded-full border border-zinc-800/80" />
             ) : user ? (
               <div className="flex items-center gap-2">
-                {/* Admin Hızlı Erişim Rozeti */}
                 {user.role === "ADMIN" && (
-                  <Link
-                    href="/admin"
-                    className="px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold hover:bg-red-500/20 transition-all"
-                  >
+                  <Link href="/admin" className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold hover:bg-red-500/20 transition-all">
                     Admin
                   </Link>
                 )}
-
-                {/* Kullanıcı Rozeti */}
-                <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-neutral-900/90 border border-neutral-800 text-xs font-semibold text-neutral-200 shadow-md">
+                <Link href="/profil" className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-zinc-800/80 text-xs font-semibold text-zinc-200 hover:bg-zinc-800 hover:text-white transition-all backdrop-blur-sm">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="max-w-[130px] truncate">{user.name || user.email.split("@")[0]}</span>
-                </div>
-
-                {/* Çıkış Yap Butonu */}
-                <button
-                  onClick={handleLogout}
-                  title="Çıkış Yap"
-                  className="p-2 rounded-full bg-neutral-900/90 border border-neutral-800 text-neutral-400 hover:text-red-400 hover:border-red-500/30 transition-all cursor-pointer active:scale-95 flex items-center justify-center"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                    />
+                  <span className="max-w-[110px] truncate">{user.name || user.email.split("@")[0]}</span>
+                </Link>
+                <button onClick={handleLogout} title="Çıkış Yap" className="p-2 rounded-full bg-zinc-900/80 border border-zinc-800/80 text-zinc-400 hover:text-red-400 hover:border-red-500/30 transition-all cursor-pointer backdrop-blur-sm">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                   </svg>
                 </button>
               </div>
             ) : (
-              /* MODERN GİRİŞ YAP / KAYDOL BUTONU */
-              <button
-                onClick={() => setIsAuthOpen(true)}
-                className="group relative inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-500 hover:from-yellow-400 hover:to-amber-300 text-black font-extrabold text-xs tracking-wide transition-all duration-300 shadow-md shadow-yellow-500/20 hover:shadow-yellow-500/40 hover:scale-[1.02] active:scale-[0.97] border border-yellow-300/40 cursor-pointer overflow-hidden"
-              >
-                {/* Parıltı Efekti (Sheen) */}
-                <span className="absolute inset-0 w-full h-full bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
-                
-                <svg
-                  className="w-3.5 h-3.5 text-black group-hover:rotate-12 transition-transform duration-300"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                  />
-                </svg>
-
-                <span>Giriş Yap / Kaydol</span>
+              <button onClick={() => setIsAuthOpen(true)} className="px-4 py-1.5 rounded-full bg-zinc-900/80 border border-zinc-800/80 text-zinc-200 text-xs font-medium hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer backdrop-blur-sm">
+                Giriş Yap
               </button>
             )}
-          </div>
 
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 md:hidden rounded-lg bg-zinc-900/80 border border-zinc-800/80 text-zinc-400 hover:text-white transition-all cursor-pointer backdrop-blur-sm" aria-label="Menüyü Aç">
+              {isMobileMenuOpen ? (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+              ) : (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={isAuthOpen}
-        onClose={() => setIsAuthOpen(false)}
-        onSuccess={(newUser) => setUser(newUser)}
-      />
+      {/* Mobil Menü */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden" onClick={() => setIsMobileMenuOpen(false)}>
+          <div className="absolute top-20 right-4 left-4 bg-zinc-950 border border-zinc-800 rounded-2xl p-5 shadow-2xl space-y-4" onClick={(e) => e.stopPropagation()}>
+            <div className="flex flex-col gap-1">
+              <Link href="/" className="px-4 py-2.5 rounded-xl hover:bg-zinc-900 text-sm font-semibold text-zinc-100 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Ana Sayfa</Link>
+              <Link href="#committees" className="px-4 py-2.5 rounded-xl hover:bg-zinc-900 text-sm font-semibold text-zinc-400 hover:text-zinc-100 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Komiteler</Link>
+              <Link href="/dersler" className="px-4 py-2.5 rounded-xl hover:bg-zinc-900 text-sm font-semibold text-zinc-400 hover:text-zinc-100 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Ders Arşivi</Link>
+              <Link href="/takvim" className="px-4 py-2.5 rounded-xl hover:bg-zinc-900 text-sm font-semibold text-zinc-400 hover:text-zinc-100 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Takvim</Link>
+              <Link href="/akis" className="px-4 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-sm font-semibold text-amber-400 transition-colors flex items-center justify-between" onClick={() => setIsMobileMenuOpen(false)}>
+                <span>Akış Modu</span>
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} onSuccess={(newUser) => setUser(newUser)} />
     </>
   );
 }

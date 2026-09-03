@@ -2,8 +2,11 @@ export interface Video {
   id: string;
   title: string;
   telegramId: string;
-  chatId?: string;     // Hata vermemesi için opsiyonel ekledik
-  messageId?: string;  // Hata vermemesi için opsiyonel ekledik
+  chatId?: string;
+  messageId?: string;
+  pdfUrl?: string | null;
+  order?: number;
+  duration?: string | number;
 }
 
 export interface Lesson {

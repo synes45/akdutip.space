@@ -23,6 +23,8 @@ model Lesson {
   committee   Committee @relation(fields: [committeeId], references: [id], onDelete: Cascade)
   videos      Video[]
   createdAt   DateTime  @default(now())
+
+  @@index([committeeId])
 }
 
 model Video {
@@ -34,6 +36,8 @@ model Video {
   lessonId   String
   lesson     Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
+
+  @@index([lessonId])
 }
 
 model ExamEvent {
@@ -45,6 +49,8 @@ model ExamEvent {
   time      String?
   location  String?
   createdAt DateTime @default(now())
+
+  @@index([date])
 }
 
 model User {
@@ -65,4 +71,53 @@ model VerificationCode {
   createdAt DateTime @default(now())
 
   @@index([email])
+}
+
+model Playlist {
+  id        String   @id @default(cuid())
+  userId    String
+  videoId   String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, videoId])
+  @@index([userId])
+}
+
+model Progress {
+  id          String   @id @default(cuid())
+  userId      String
+  videoId     String
+  currentTime Float    @default(0)
+  duration    Float    @default(0)
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, videoId])
+  @@index([userId])
+  @@index([videoId])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  userId    String
+  videoId   String
+  content   String
+  timestamp Float?   // Video saniyesi
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([videoId])
+}
+
+model Report {
+  id        String   @id @default(cuid())
+  videoId   String
+  userId    String?
+  note      String
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+
+  @@index([videoId])
 }
