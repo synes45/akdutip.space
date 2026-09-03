@@ -47,14 +47,12 @@ export default function ProfilePage() {
   useEffect(() => {
     async function loadProfileData() {
       try {
-        // 1. Kullanıcı Oturum Bilgisini Çek
         const authRes = await fetch("/api/auth/me");
         if (authRes.ok) {
           const authData = await authRes.json();
           setUser(authData.user);
         }
 
-        // 2. Gerçek Veritabanı İzleme Geçmişini Çek
         const progressRes = await fetch("/api/user/progress");
         if (progressRes.ok) {
           const progressData = await progressRes.json();
@@ -63,7 +61,6 @@ export default function ProfilePage() {
           }
         }
 
-        // 3. Oynatma Listesini Çek
         const playlistRes = await fetch("/api/user/playlist");
         if (playlistRes.ok) {
           const playlistData = await playlistRes.json();
@@ -72,7 +69,6 @@ export default function ProfilePage() {
           }
         }
 
-        // 4. Öğrenci Notlarını Çek
         const notesRes = await fetch("/api/user/notes");
         if (notesRes.ok) {
           const notesData = await notesRes.json();
@@ -99,8 +95,7 @@ export default function ProfilePage() {
 
   const calculateTotalWatchHours = () => {
     const totalSeconds = history.reduce((acc, curr) => acc + (curr.currentTime || 0), 0);
-    const hours = (totalSeconds / 3600).toFixed(1);
-    return hours;
+    return (totalSeconds / 3600).toFixed(1);
   };
 
   const handleRemoveFromPlaylist = async (videoId: string) => {
@@ -143,92 +138,100 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center font-bold text-yellow-500">
+      <div className="min-h-screen bg-[#070709] text-white flex items-center justify-center font-sans">
         <div className="text-center space-y-3">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-2 border-yellow-500 border-t-transparent" />
-          <p className="text-xs">Profil yükleniyor...</p>
+          <div className="inline-block animate-spin rounded-full h-6 w-6 border-2 border-amber-400 border-t-transparent" />
+          <p className="text-xs font-medium text-neutral-400">Profil yükleniyor...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white font-sans selection:bg-yellow-500 selection:text-black flex flex-col justify-between">
+    <div className="min-h-screen bg-[#070709] text-white font-sans selection:bg-amber-400 selection:text-black flex flex-col justify-between relative overflow-hidden">
+      
+      {/* iOS Stili Arka Plan Işık Efektleri (Glow Orbs) */}
+      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[850px] h-[450px] bg-gradient-to-tr from-amber-500/10 via-indigo-500/10 to-sky-500/10 blur-[150px] rounded-full" />
+      <div className="pointer-events-none absolute top-1/2 left-0 w-[500px] h-[500px] bg-amber-500/5 blur-[170px] rounded-full" />
+
       <div>
         <Header />
 
-        <main className="pt-28 max-w-[1200px] mx-auto px-6 pb-20 space-y-8">
+        <main className="pt-32 max-w-[1280px] mx-auto px-5 sm:px-8 pb-24 space-y-10 relative z-10">
           
-          {/* PROFİL BAŞLIK VE KULLANICI KARTI */}
-          <div className="bg-neutral-900/40 p-6 sm:p-8 rounded-3xl border border-neutral-900 backdrop-blur-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-xl">
-            <div className="flex items-center gap-5">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-tr from-yellow-500 to-amber-400 text-black font-black text-2xl sm:text-3xl rounded-2xl flex items-center justify-center shadow-lg shadow-yellow-500/20">
+          {/* PROFİL KART VE İSTATİSTİK ALANI */}
+          <div className="bg-white/[0.02] backdrop-blur-3xl p-6 sm:p-8 rounded-3xl border border-white/[0.08] shadow-2xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 relative overflow-hidden">
+            
+            <div className="flex items-center gap-6">
+              {/* Avatar */}
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-tr from-amber-400 to-amber-200 text-black font-semibold text-2xl sm:text-3xl rounded-3xl flex items-center justify-center shadow-lg shadow-amber-400/20 shrink-0">
                 {user?.name ? user.name[0].toUpperCase() : "Ö"}
               </div>
-              <div className="space-y-1">
-                <h1 className="text-xl sm:text-2xl font-black text-white">
-                  {user?.name || "Akdeniz Tıp Öğrencisi"}
-                </h1>
-                <p className="text-xs sm:text-sm text-neutral-400">
-                  {user?.email || "ogrenci@ogr.akdeniz.edu.tr"}
-                </p>
-                <div className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded-xl text-yellow-400 text-xs font-bold">
+              
+              <div className="space-y-1.5">
+                <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-[11px] font-medium text-amber-300">
                   <span>🎓</span>
                   <span>Tıp Fakültesi Öğrencisi</span>
                 </div>
+                <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white/95">
+                  {user?.name || "Akdeniz Tıp Öğrencisi"}
+                </h1>
+                <p className="text-xs sm:text-sm text-neutral-400 font-normal">
+                  {user?.email || "ogrenci@ogr.akdeniz.edu.tr"}
+                </p>
               </div>
             </div>
 
-            {/* İSTATİSTİK ROZETLERİ */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full sm:w-auto">
-              <div className="bg-neutral-950 border border-neutral-900 p-3 rounded-2xl text-center">
-                <span className="text-lg font-black text-yellow-500 block">{calculateTotalWatchHours()} saat</span>
-                <span className="text-[10px] text-neutral-400 font-semibold">İzleme Süresi</span>
+            {/* İstatistik Rozetleri */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full lg:w-auto">
+              <div className="bg-black/40 backdrop-blur-2xl border border-white/[0.06] p-3.5 rounded-2xl text-center space-y-0.5">
+                <span className="text-base font-semibold text-amber-300 block">{calculateTotalWatchHours()}s</span>
+                <span className="text-[10px] text-neutral-400 font-medium">İzleme Süresi</span>
               </div>
-              <div className="bg-neutral-950 border border-neutral-900 p-3 rounded-2xl text-center">
-                <span className="text-lg font-black text-emerald-400 block">{history.filter(h => h.isCompleted).length}</span>
-                <span className="text-[10px] text-neutral-400 font-semibold">Tamamlanan</span>
+              <div className="bg-black/40 backdrop-blur-2xl border border-white/[0.06] p-3.5 rounded-2xl text-center space-y-0.5">
+                <span className="text-base font-semibold text-emerald-400 block">{history.filter(h => h.isCompleted).length}</span>
+                <span className="text-[10px] text-neutral-400 font-medium">Tamamlanan</span>
               </div>
-              <div className="bg-neutral-950 border border-neutral-900 p-3 rounded-2xl text-center">
-                <span className="text-lg font-black text-blue-400 block">{playlist.length}</span>
-                <span className="text-[10px] text-neutral-400 font-semibold">Favori Ders</span>
+              <div className="bg-black/40 backdrop-blur-2xl border border-white/[0.06] p-3.5 rounded-2xl text-center space-y-0.5">
+                <span className="text-base font-semibold text-sky-400 block">{playlist.length}</span>
+                <span className="text-[10px] text-neutral-400 font-medium">Favori Ders</span>
               </div>
-              <div className="bg-neutral-950 border border-neutral-900 p-3 rounded-2xl text-center">
-                <span className="text-lg font-black text-amber-300 block">{notes.length}</span>
-                <span className="text-[10px] text-neutral-400 font-semibold">Kişisel Not</span>
+              <div className="bg-black/40 backdrop-blur-2xl border border-white/[0.06] p-3.5 rounded-2xl text-center space-y-0.5">
+                <span className="text-base font-semibold text-purple-400 block">{notes.length}</span>
+                <span className="text-[10px] text-neutral-400 font-medium">Kişisel Not</span>
               </div>
             </div>
           </div>
 
-          {/* TAB MENÜSÜ */}
-          <div className="flex items-center justify-between border-b border-neutral-900 pb-4">
-            <div className="flex items-center gap-2">
+          {/* TAB BAR (GLASS NAV) */}
+          <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
               <button
                 onClick={() => setActiveTab("continue")}
-                className={`px-5 py-2.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-2xl text-xs font-medium transition-all duration-300 cursor-pointer whitespace-nowrap backdrop-blur-md border active:scale-95 ${
                   activeTab === "continue"
-                    ? "bg-yellow-500 text-black shadow-lg shadow-yellow-500/15"
-                    : "bg-neutral-900/60 text-neutral-400 hover:text-white hover:bg-neutral-800"
+                    ? "bg-amber-400 text-black border-amber-400 font-semibold shadow-lg shadow-amber-400/20"
+                    : "bg-white/[0.02] border-white/[0.06] text-neutral-400 hover:text-white hover:bg-white/[0.05]"
                 }`}
               >
                 Kaldığım Yerden Devam Et ({history.length})
               </button>
               <button
                 onClick={() => setActiveTab("playlist")}
-                className={`px-5 py-2.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-2xl text-xs font-medium transition-all duration-300 cursor-pointer whitespace-nowrap backdrop-blur-md border active:scale-95 ${
                   activeTab === "playlist"
-                    ? "bg-yellow-500 text-black shadow-lg shadow-yellow-500/15"
-                    : "bg-neutral-900/60 text-neutral-400 hover:text-white hover:bg-neutral-800"
+                    ? "bg-amber-400 text-black border-amber-400 font-semibold shadow-lg shadow-amber-400/20"
+                    : "bg-white/[0.02] border-white/[0.06] text-neutral-400 hover:text-white hover:bg-white/[0.05]"
                 }`}
               >
                 Oynatma Listem ({playlist.length})
               </button>
               <button
                 onClick={() => setActiveTab("notes")}
-                className={`px-5 py-2.5 rounded-2xl text-xs font-extrabold transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-2xl text-xs font-medium transition-all duration-300 cursor-pointer whitespace-nowrap backdrop-blur-md border active:scale-95 ${
                   activeTab === "notes"
-                    ? "bg-yellow-500 text-black shadow-lg shadow-yellow-500/15"
-                    : "bg-neutral-900/60 text-neutral-400 hover:text-white hover:bg-neutral-800"
+                    ? "bg-amber-400 text-black border-amber-400 font-semibold shadow-lg shadow-amber-400/20"
+                    : "bg-white/[0.02] border-white/[0.06] text-neutral-400 hover:text-white hover:bg-white/[0.05]"
                 }`}
               >
                 Ders Notlarım ({notes.length})
@@ -238,7 +241,7 @@ export default function ProfilePage() {
             {activeTab === "continue" && history.length > 0 && (
               <button
                 onClick={handleClearHistory}
-                className="text-xs text-red-400 hover:text-red-300 font-bold transition-colors cursor-pointer hidden sm:block"
+                className="text-xs text-rose-400 hover:text-rose-300 font-medium transition-colors cursor-pointer hidden sm:block px-3 py-1.5 rounded-xl bg-rose-400/10 border border-rose-400/20"
               >
                 Geçmişi Temizle
               </button>
@@ -249,36 +252,40 @@ export default function ProfilePage() {
           {activeTab === "continue" && (
             <div className="space-y-4">
               {history.length === 0 ? (
-                <div className="p-12 text-center bg-neutral-900/30 rounded-3xl border border-neutral-900 text-neutral-500 text-sm space-y-2">
-                  <span className="text-3xl block">⏳</span>
-                  <p className="font-semibold">Henüz izlenmiş bir ders kaydı bulunmuyor.</p>
-                  <Link href="/dersler" className="text-xs text-yellow-500 hover:underline font-bold inline-block mt-2">
+                <div className="py-20 text-center bg-white/[0.015] backdrop-blur-3xl rounded-3xl border border-white/[0.08] space-y-3">
+                  <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center mx-auto text-neutral-500">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <p className="text-xs text-neutral-400 font-normal">Henüz izlenmiş bir ders kaydı bulunmuyor.</p>
+                  <Link href="/dersler" className="text-xs text-amber-300 hover:underline font-medium inline-block pt-1">
                     Ders Kataloğuna Göz At →
                   </Link>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {history.map((item) => (
                     <div
                       key={item.videoId}
-                      className="bg-neutral-900/40 backdrop-blur-md p-5 rounded-2xl border border-neutral-900 hover:border-neutral-800 transition-all space-y-4 shadow-lg"
+                      className="bg-white/[0.02] backdrop-blur-3xl p-5 sm:p-6 rounded-3xl border border-white/[0.08] hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300 space-y-4 shadow-2xl relative"
                     >
                       <div className="flex items-start justify-between gap-3">
-                        <div>
+                        <div className="space-y-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-black text-yellow-500 uppercase tracking-wider">
+                            <span className="text-[10px] font-medium text-amber-400 uppercase tracking-wider">
                               {item.lessonName}
                             </span>
-                            <span className="text-[10px] text-neutral-500 font-semibold">
+                            <span className="text-[10px] text-neutral-500 font-medium">
                               • {item.committeeTitle}
                             </span>
                           </div>
-                          <h3 className="text-sm font-bold text-white mt-1 line-clamp-1">
+                          <h3 className="text-sm font-medium text-white/90 line-clamp-1">
                             {item.videoTitle}
                           </h3>
                         </div>
                         {item.isCompleted && (
-                          <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[9px] font-black rounded uppercase">
+                          <span className="px-2.5 py-0.5 bg-emerald-400/10 text-emerald-300 border border-emerald-400/20 text-[9px] font-medium rounded-full uppercase backdrop-blur-md">
                             Tamamlandı
                           </span>
                         )}
@@ -286,16 +293,16 @@ export default function ProfilePage() {
 
                       {/* İlerleme Çubuğu */}
                       <div className="space-y-1.5">
-                        <div className="flex justify-between text-[11px] font-mono text-neutral-400 font-semibold">
+                        <div className="flex justify-between text-[11px] font-mono text-neutral-400 font-medium">
                           <span>Kaldığı Yer: {formatTime(item.currentTime)}</span>
-                          <span className="text-yellow-400">%{item.percent}</span>
+                          <span className="text-amber-300">%{item.percent}</span>
                         </div>
-                        <div className="w-full h-2 bg-neutral-950 rounded-full overflow-hidden border border-neutral-850">
+                        <div className="w-full h-1.5 bg-black/60 rounded-full overflow-hidden border border-white/[0.05]">
                           <div
-                            className={`h-full transition-all duration-300 ${
+                            className={`h-full transition-all duration-500 ${
                               item.isCompleted
                                 ? "bg-emerald-400"
-                                : "bg-gradient-to-r from-yellow-500 to-amber-400"
+                                : "bg-gradient-to-r from-amber-400 to-amber-200"
                             }`}
                             style={{ width: `${item.percent}%` }}
                           />
@@ -306,7 +313,7 @@ export default function ProfilePage() {
                         <span className="text-[10px] font-mono text-neutral-500">{item.updatedAt}</span>
                         <Link
                           href={`/ders/${item.videoId}`}
-                          className="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-black text-xs rounded-xl transition-all shadow-md shadow-yellow-500/10 active:scale-95"
+                          className="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-black font-semibold text-xs rounded-2xl transition-all shadow-md shadow-amber-400/20 active:scale-95"
                         >
                           İzlemeye Devam Et →
                         </Link>
@@ -322,10 +329,14 @@ export default function ProfilePage() {
           {activeTab === "playlist" && (
             <div className="space-y-4">
               {playlist.length === 0 ? (
-                <div className="p-12 text-center bg-neutral-900/30 rounded-3xl border border-neutral-900 text-neutral-500 text-sm space-y-2">
-                  <span className="text-3xl block">⭐</span>
-                  <p className="font-semibold">Oynatma listenizde henüz kayıtlı ders yok.</p>
-                  <p className="text-xs text-neutral-600">
+                <div className="py-20 text-center bg-white/[0.015] backdrop-blur-3xl rounded-3xl border border-white/[0.08] space-y-3">
+                  <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center mx-auto text-neutral-500">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                    </svg>
+                  </div>
+                  <p className="text-xs text-neutral-400 font-normal">Oynatma listenizde henüz kayıtlı ders yok.</p>
+                  <p className="text-[11px] text-neutral-500">
                     Ders izleme sayfasında <strong>"Listeme Ekle"</strong> butonuna basarak buraya ekleyebilirsiniz.
                   </p>
                 </div>
@@ -334,28 +345,28 @@ export default function ProfilePage() {
                   {playlist.map((item) => (
                     <div
                       key={item.id}
-                      className="bg-neutral-900/40 backdrop-blur-md p-4.5 rounded-2xl border border-neutral-900 flex items-center justify-between hover:bg-neutral-900/60 transition-all shadow-md"
+                      className="bg-white/[0.02] backdrop-blur-3xl p-4.5 sm:p-5 rounded-3xl border border-white/[0.08] flex items-center justify-between hover:bg-white/[0.04] hover:border-white/20 transition-all duration-300 shadow-xl"
                     >
                       <div className="space-y-1">
-                        <span className="text-[10px] font-bold text-yellow-500 uppercase tracking-widest block">
+                        <span className="text-[10px] font-medium text-amber-400 uppercase tracking-wider block">
                           {item.committeeTitle}
                         </span>
-                        <h4 className="text-sm font-bold text-white">{item.title}</h4>
+                        <h4 className="text-sm font-medium text-white/90">{item.title}</h4>
                       </div>
 
                       <div className="flex items-center gap-3">
                         <button
                           onClick={() => handleRemoveFromPlaylist(item.id)}
-                          className="p-2 text-neutral-500 hover:text-red-400 transition-colors cursor-pointer"
+                          className="p-2 text-neutral-500 hover:text-rose-400 transition-colors cursor-pointer"
                           title="Listeden Çıkar"
                         >
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                         </button>
                         <Link
                           href={`/ders/${item.id}`}
-                          className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-bold rounded-xl border border-neutral-800 transition-all active:scale-95"
+                          className="px-4 py-2 bg-white/[0.04] hover:bg-white/[0.08] text-white text-xs font-medium rounded-2xl border border-white/10 transition-all active:scale-95"
                         >
                           Dersi Aç
                         </Link>
@@ -371,33 +382,37 @@ export default function ProfilePage() {
           {activeTab === "notes" && (
             <div className="space-y-4">
               {notes.length === 0 ? (
-                <div className="p-12 text-center bg-neutral-900/30 rounded-3xl border border-neutral-900 text-neutral-500 text-sm space-y-2">
-                  <span className="text-3xl block">📝</span>
-                  <p className="font-semibold">Henüz ders notu kaydetmediniz.</p>
-                  <p className="text-xs text-neutral-600">
+                <div className="py-20 text-center bg-white/[0.015] backdrop-blur-3xl rounded-3xl border border-white/[0.08] space-y-3">
+                  <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center mx-auto text-neutral-500">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </div>
+                  <p className="text-xs text-neutral-400 font-normal">Henüz ders notu kaydetmediniz.</p>
+                  <p className="text-[11px] text-neutral-500">
                     Video oynatırken anlık not alabilir ve burada derli toplu görebilirsiniz.
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {notes.map((note) => (
                     <div
                       key={note.id}
-                      className="bg-neutral-900/40 backdrop-blur-md p-5 rounded-2xl border border-neutral-900 hover:border-neutral-800 transition-all space-y-3 shadow-lg"
+                      className="bg-white/[0.02] backdrop-blur-3xl p-5 sm:p-6 rounded-3xl border border-white/[0.08] hover:border-white/20 transition-all duration-300 space-y-3.5 shadow-2xl"
                     >
-                      <div className="flex items-start justify-between gap-3 border-b border-neutral-850 pb-2.5">
-                        <div>
-                          <span className="text-[10px] font-bold text-yellow-500 uppercase tracking-widest">
+                      <div className="flex items-start justify-between gap-3 border-b border-white/[0.06] pb-3">
+                        <div className="space-y-0.5">
+                          <span className="text-[10px] font-medium text-amber-400 uppercase tracking-wider">
                             {note.lessonName} • {note.committeeTitle}
                           </span>
-                          <h4 className="text-xs font-bold text-white mt-0.5 line-clamp-1">{note.videoTitle}</h4>
+                          <h4 className="text-xs font-medium text-white/90 line-clamp-1">{note.videoTitle}</h4>
                         </div>
                         <button
                           onClick={() => handleDeleteNote(note.id)}
-                          className="text-neutral-500 hover:text-red-400 transition-colors p-1 cursor-pointer"
+                          className="text-neutral-500 hover:text-rose-400 transition-colors p-1 cursor-pointer"
                           title="Notu Sil"
                         >
-                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                         </button>
@@ -407,12 +422,12 @@ export default function ProfilePage() {
                         {note.content}
                       </p>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-neutral-850 text-[10px] font-mono text-neutral-500">
+                      <div className="flex items-center justify-between pt-2 border-t border-white/[0.05] text-[10px] font-mono text-neutral-500">
                         <span>{note.createdAt}</span>
                         {note.timestamp !== null && (
                           <Link
                             href={`/ders/${note.videoId}`}
-                            className="text-yellow-400 hover:underline font-bold flex items-center gap-1"
+                            className="text-amber-300 hover:underline font-medium flex items-center gap-1.5"
                           >
                             <span>⏱ {formatTime(note.timestamp)}</span>
                             <span>→</span>
