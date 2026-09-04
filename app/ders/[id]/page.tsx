@@ -477,7 +477,7 @@ export default function VideoPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#070709] text-white font-sans selection:bg-amber-400 selection:text-black flex flex-col justify-between relative overflow-hidden">
+    <div className="min-h-screen min-h-svh bg-[#070709] text-white font-sans selection:bg-amber-400 selection:text-black flex flex-col justify-between relative overflow-x-hidden">
       
       {/* iOS Stili Arka Plan Işık Efektleri (Glow Orbs) */}
       <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-tr from-amber-500/10 via-purple-500/10 to-blue-500/10 blur-[140px] rounded-full" />

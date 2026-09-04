@@ -91,7 +91,7 @@ export default function CalendarPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#070709] text-white font-sans selection:bg-amber-400 selection:text-black flex flex-col justify-between relative overflow-hidden">
+    <div className="min-h-screen min-h-svh bg-[#070709] text-white font-sans selection:bg-amber-400 selection:text-black flex flex-col justify-between relative overflow-x-hidden">
       
       {/* iOS Stili Arka Plan Işık Efektleri (Glow Orbs) */}
       <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-tr from-amber-500/10 via-purple-500/10 to-blue-500/10 blur-[140px] rounded-full" />
@@ -204,7 +204,7 @@ export default function CalendarPage() {
                         onClick={() => setSelectedDate(isSelected ? null : dateStr)}
                         className={`h-20 sm:h-24 p-2.5 rounded-2xl border flex flex-col justify-between items-start transition-all duration-300 relative text-left cursor-pointer group active:scale-[0.98] ${
                           isSelected
-                            ? "border-amber-400/80 bg-amber-400/10 shadow-lg shadow-amber-400/10 backdrop-blur-xl"
+                            ? "border-amber-400/80 bg-amber-400/10 shadow-lg shadow-amber-400/10"
                             : isToday
                             ? "border-white/20 bg-white/[0.06]"
                             : "border-white/[0.05] bg-white/[0.015] hover:border-white/20 hover:bg-white/[0.04]"
@@ -232,7 +232,7 @@ export default function CalendarPage() {
                           {dayEvents.slice(0, 2).map((ev) => (
                             <div
                               key={ev.id}
-                              className={`text-[9px] font-medium truncate px-1.5 py-0.5 rounded-lg border backdrop-blur-md ${getTypeBadge(
+                              className={`text-[9px] font-medium truncate px-1.5 py-0.5 rounded-lg border ${getTypeBadge(
                                 ev.type
                               )}`}
                             >

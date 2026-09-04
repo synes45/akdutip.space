@@ -148,7 +148,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#070709] text-white font-sans selection:bg-amber-400 selection:text-black flex flex-col justify-between relative overflow-hidden">
+    <div className="min-h-screen min-h-svh bg-[#070709] text-white font-sans selection:bg-amber-400 selection:text-black flex flex-col justify-between relative overflow-x-hidden">
       
       {/* iOS Stili Arka Plan Işık Efektleri (Glow Orbs) */}
       <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[850px] h-[450px] bg-gradient-to-tr from-amber-500/10 via-indigo-500/10 to-sky-500/10 blur-[150px] rounded-full" />
@@ -268,7 +268,7 @@ export default function ProfilePage() {
                   {history.map((item) => (
                     <div
                       key={item.videoId}
-                      className="bg-white/[0.02] backdrop-blur-3xl p-5 sm:p-6 rounded-3xl border border-white/[0.08] hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300 space-y-4 shadow-2xl relative"
+                      className="bg-white/[0.03] p-5 sm:p-6 rounded-3xl border border-white/[0.08] hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300 space-y-4 shadow-xl relative"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="space-y-1">
@@ -345,7 +345,7 @@ export default function ProfilePage() {
                   {playlist.map((item) => (
                     <div
                       key={item.id}
-                      className="bg-white/[0.02] backdrop-blur-3xl p-4.5 sm:p-5 rounded-3xl border border-white/[0.08] flex items-center justify-between hover:bg-white/[0.04] hover:border-white/20 transition-all duration-300 shadow-xl"
+                      className="bg-white/[0.03] p-4 sm:p-5 rounded-3xl border border-white/[0.08] flex items-center justify-between hover:bg-white/[0.04] hover:border-white/20 transition-all duration-300 shadow-lg"
                     >
                       <div className="space-y-1">
                         <span className="text-[10px] font-medium text-amber-400 uppercase tracking-wider block">
@@ -398,7 +398,7 @@ export default function ProfilePage() {
                   {notes.map((note) => (
                     <div
                       key={note.id}
-                      className="bg-white/[0.02] backdrop-blur-3xl p-5 sm:p-6 rounded-3xl border border-white/[0.08] hover:border-white/20 transition-all duration-300 space-y-3.5 shadow-2xl"
+                      className="bg-white/[0.03] p-5 sm:p-6 rounded-3xl border border-white/[0.08] hover:border-white/20 transition-all duration-300 space-y-3.5 shadow-xl"
                     >
                       <div className="flex items-start justify-between gap-3 border-b border-white/[0.06] pb-3">
                         <div className="space-y-0.5">

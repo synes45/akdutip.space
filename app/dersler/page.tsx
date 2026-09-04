@@ -92,7 +92,7 @@ export default function DerslerPage() {
   }, [videos, searchQuery, selectedCommittee, selectedLesson]);
 
   return (
-    <div className="min-h-screen bg-[#070709] text-white font-sans selection:bg-amber-400 selection:text-black flex flex-col justify-between relative overflow-hidden">
+    <div className="min-h-screen min-h-svh bg-[#070709] text-white font-sans selection:bg-amber-400 selection:text-black flex flex-col justify-between relative overflow-x-hidden">
       
       {/* iOS Stili Arka Plan Işık Yansımaları (Glow Orbs) */}
       <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-gradient-to-tr from-amber-500/10 via-purple-500/10 to-sky-500/10 blur-[150px] rounded-full" />
@@ -214,7 +214,7 @@ export default function DerslerPage() {
                 <Link
                   key={video.id}
                   href={`/ders/${video.id}`}
-                  className="group bg-white/[0.02] backdrop-blur-3xl rounded-3xl border border-white/[0.08] overflow-hidden hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300 cursor-pointer flex flex-col justify-between shadow-2xl relative"
+                  className="group bg-white/[0.03] rounded-3xl border border-white/[0.08] overflow-hidden hover:border-white/20 hover:bg-white/[0.05] transition-all duration-300 cursor-pointer flex flex-col justify-between shadow-xl relative"
                 >
                   {/* Thumbnail Alanı */}
                   <div className="relative aspect-video bg-black/60 flex items-center justify-center overflow-hidden border-b border-white/[0.06]">

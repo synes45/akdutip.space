@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Thumbnail'ları 24 saat boyunca önbellekte tut (ISR)
-export const revalidate = 86400;
-
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const channel = searchParams.get("channel");
@@ -26,7 +23,7 @@ export async function GET(req: NextRequest) {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
       },
-      next: { revalidate: 86400 }, // 24 saatlik Next.js Data Cache
+      next: { revalidate: 86400 }, // 24 saat önbellekleme yap
     });
 
     if (!res.ok) {
@@ -37,34 +34,14 @@ export async function GET(req: NextRequest) {
 
     // Video thumbnail veya blurred photo kapak görsellerini yakalayan esnek Regex
     const match =
-      html.match(/background-image:\s*url\(['"']?([^'"]+)['"']?\)/i) ||
+      html.match(/background-image:\s*url\(['"]?([^'"]+)['"]?\)/i) ||
       html.match(/tgme_widget_message_video_thumb"[^>]*style="background-image:url\('([^']+)'\)"/i);
 
-    if (!match || !match[1]) {
-      return NextResponse.json({ error: "Kapak görseli bulunamadı" }, { status: 404 });
+    if (match && match[1]) {
+      return NextResponse.redirect(match[1]);
     }
 
-    const imageUrl = match[1];
-
-    // Görseli proxy et — böylece browser'a cache-control header verebiliriz.
-    // NextResponse.redirect() kullanmak Next.js'in cache'ini devre dışı bırakırdı.
-    const imageRes = await fetch(imageUrl);
-
-    if (!imageRes.ok) {
-      return NextResponse.json({ error: "Görsel indirilemedi" }, { status: 502 });
-    }
-
-    const imageBuffer = await imageRes.arrayBuffer();
-    const contentType = imageRes.headers.get("content-type") || "image/jpeg";
-
-    return new NextResponse(imageBuffer, {
-      status: 200,
-      headers: {
-        "Content-Type": contentType,
-        // Tarayıcıda 24 saat, CDN/proxy'de 7 gün tut
-        "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=3600",
-      },
-    });
+    return NextResponse.json({ error: "Kapak görseli bulunamadı" }, { status: 404 });
   } catch (error) {
     return NextResponse.json({ error: "Görsel çekilemedi" }, { status: 500 });
   }
