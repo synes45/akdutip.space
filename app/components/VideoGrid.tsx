@@ -83,7 +83,7 @@ export default function VideoGrid({ selectedCommittee, selectedLesson, onSelectL
                   className="group flex flex-col gap-2.5 cursor-pointer [content-visibility:auto] [contain-intrinsic-size:auto_180px]"
                 >
                   {/* Thumbnail */}
-                  <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-neutral-950 border border-white/[0.08] group-hover:border-white/20 transition-colors shadow-xl">
+                  <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-neutral-950 border border-white/[0.08] md:group-hover:border-white/20 transition-colors shadow-md md:shadow-xl">
                     {/* Preview video (hover) */}
                     {video.previewUrl && isHovered ? (
                       <video
@@ -101,13 +101,13 @@ export default function VideoGrid({ selectedCommittee, selectedLesson, onSelectL
                         alt={video.title}
                         fill
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="object-cover md:transition-transform md:duration-300 md:group-hover:scale-105"
                         loading="lazy"
                         unoptimized
                       />
                     ) : (
                       <div className="absolute inset-0 bg-neutral-950 flex items-center justify-center">
-                        <svg className="w-6 h-6 text-neutral-700 group-hover:text-amber-400/80 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="w-6 h-6 text-neutral-700 md:group-hover:text-amber-400/80 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                         </svg>
                       </div>
@@ -117,7 +117,7 @@ export default function VideoGrid({ selectedCommittee, selectedLesson, onSelectL
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none z-10" />
 
                     {/* Play icon (hover) */}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center z-20">
+                    <div className="absolute inset-0 bg-black/40 opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center z-20 pointer-events-none">
                       <div className="w-9 h-9 rounded-xl bg-amber-400 text-black flex items-center justify-center shadow-lg shadow-amber-400/30 pl-0.5">
                         <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                       </div>
@@ -131,7 +131,7 @@ export default function VideoGrid({ selectedCommittee, selectedLesson, onSelectL
 
                   {/* Alt bilgiler */}
                   <div className="flex flex-col gap-0.5 px-0.5">
-                    <h4 className="font-medium text-xs text-white/90 line-clamp-2 leading-snug group-hover:text-amber-300 transition-colors duration-200">
+                    <h4 className="font-medium text-xs text-white/90 line-clamp-2 leading-snug md:group-hover:text-amber-300 transition-colors duration-200">
                       {video.title}
                     </h4>
                     <span className="text-[10px] font-medium text-neutral-400 tracking-wide uppercase">

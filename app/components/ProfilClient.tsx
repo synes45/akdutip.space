@@ -115,8 +115,19 @@ export default function ProfilClient({ initialData }: Props) {
 
   return (
     <div className="min-h-screen min-h-svh bg-[#070709] text-white font-sans selection:bg-amber-400 selection:text-black flex flex-col justify-between relative overflow-x-hidden">
-      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[850px] h-[450px] bg-gradient-to-tr from-amber-500/10 via-indigo-500/10 to-sky-500/10 blur-[150px] rounded-full" />
-      <div className="pointer-events-none absolute top-1/2 left-0 w-[500px] h-[500px] bg-amber-500/5 blur-[170px] rounded-full" />
+      {/* Glow Orbs — High performance radial gradient without GPU filter blur */}
+      <div
+        className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[850px] h-[450px] rounded-full opacity-60"
+        style={{
+          background: "radial-gradient(ellipse at center, rgba(245, 158, 11, 0.15) 0%, rgba(99, 102, 241, 0.1) 40%, transparent 70%)",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute top-1/2 left-0 w-[500px] h-[500px] rounded-full opacity-40"
+        style={{
+          background: "radial-gradient(circle at center, rgba(245, 158, 11, 0.12) 0%, transparent 70%)",
+        }}
+      />
 
       <div>
         <Header />

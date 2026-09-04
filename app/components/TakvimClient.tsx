@@ -64,8 +64,19 @@ export default function TakvimClient({ initialEvents }: Props) {
 
   return (
     <div className="min-h-screen min-h-svh bg-[#070709] text-white font-sans selection:bg-amber-400 selection:text-black flex flex-col justify-between relative overflow-x-hidden">
-      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-tr from-amber-500/10 via-purple-500/10 to-blue-500/10 blur-[140px] rounded-full" />
-      <div className="pointer-events-none absolute top-1/2 right-0 w-[500px] h-[500px] bg-amber-500/5 blur-[160px] rounded-full" />
+      {/* Glow Orbs — High performance radial gradient without GPU filter blur */}
+      <div
+        className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full opacity-60"
+        style={{
+          background: "radial-gradient(ellipse at center, rgba(245, 158, 11, 0.15) 0%, rgba(168, 85, 247, 0.1) 40%, transparent 70%)",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute top-1/2 right-0 w-[500px] h-[500px] rounded-full opacity-40"
+        style={{
+          background: "radial-gradient(circle at center, rgba(245, 158, 11, 0.12) 0%, transparent 70%)",
+        }}
+      />
 
       <div>
         <Header />

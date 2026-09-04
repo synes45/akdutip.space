@@ -43,9 +43,19 @@ export default function DerslerClient({ initialVideos, initialCommittees, initia
 
   return (
     <div className="min-h-screen min-h-svh bg-[#070709] text-white font-sans selection:bg-amber-400 selection:text-black flex flex-col justify-between relative overflow-x-hidden">
-      {/* Glow Orbs */}
-      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-gradient-to-tr from-amber-500/10 via-purple-500/10 to-sky-500/10 blur-[150px] rounded-full" />
-      <div className="pointer-events-none absolute top-1/3 left-0 w-[500px] h-[500px] bg-amber-500/5 blur-[170px] rounded-full" />
+      {/* Glow Orbs — High performance radial gradient without GPU filter blur */}
+      <div
+        className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[450px] rounded-full opacity-60"
+        style={{
+          background: "radial-gradient(ellipse at center, rgba(245, 158, 11, 0.15) 0%, rgba(168, 85, 247, 0.1) 40%, transparent 70%)",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute top-1/3 left-0 w-[500px] h-[500px] rounded-full opacity-40"
+        style={{
+          background: "radial-gradient(circle at center, rgba(245, 158, 11, 0.12) 0%, transparent 70%)",
+        }}
+      />
 
       <div>
         <Header />

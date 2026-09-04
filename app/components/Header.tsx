@@ -19,11 +19,16 @@ export default function Header() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let prev = false;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const scrolled = window.scrollY > 20;
+      if (scrolled !== prev) {
+        prev = scrolled;
+        setIsScrolled(scrolled);
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
