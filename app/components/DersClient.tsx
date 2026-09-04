@@ -63,6 +63,7 @@ export default function DersClient({
   const [playbackRate, setPlaybackRate] = useState(1);
   const [showSpeedMenu, setShowSpeedMenu] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [videoError, setVideoError] = useState<string | null>(null);
 
   const [isInPlaylist, setIsInPlaylist] = useState(initialInPlaylist);
   const [isCompleted, setIsCompleted] = useState(initialIsCompleted);
@@ -517,11 +518,44 @@ export default function DersClient({
                       }}
                       onClick={togglePlay}
                       onContextMenu={(e) => e.preventDefault()}
+                      onError={async () => {
+                        try {
+                          const res = await fetch(videoStreamUrl);
+                          const data = await res.json();
+                          setVideoError(data.details || data.error || "Video akışına ulaşılamadı.");
+                        } catch {
+                          setVideoError("Video akışı yüklenemedi. Telegram sunucusuna bağlanılamıyor.");
+                        }
+                      }}
                       src={videoStreamUrl}
                       className="w-full h-full object-contain cursor-pointer"
                     />
 
-                    {!isPlaying && (
+                    {videoError && (
+                      <div className="absolute inset-0 bg-neutral-950/95 flex flex-col items-center justify-center p-6 text-center space-y-3 z-40">
+                        <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 text-xl">
+                          ⚠️
+                        </div>
+                        <h3 className="text-white font-semibold text-sm">Video Akışı Başlatılamadı</h3>
+                        <p className="text-xs text-rose-300/90 max-w-md leading-relaxed font-mono bg-black/60 p-3 rounded-xl border border-white/5">
+                          {videoError}
+                        </p>
+                        <button
+                          onClick={() => {
+                            setVideoError(null);
+                            if (videoRef.current) {
+                              videoRef.current.load();
+                              videoRef.current.play().catch(() => {});
+                            }
+                          }}
+                          className="px-4 py-2 bg-amber-400 text-black text-xs font-semibold rounded-xl hover:bg-amber-300 transition-colors cursor-pointer"
+                        >
+                          Tekrar Dene
+                        </button>
+                      </div>
+                    )}
+
+                    {!isPlaying && !videoError && (
                       <button
                         onClick={togglePlay}
                         className="absolute w-16 h-16 bg-amber-400 hover:bg-amber-300 text-black rounded-full flex items-center justify-center shadow-2xl transition-transform hover:scale-105 active:scale-95 z-20 cursor-pointer"

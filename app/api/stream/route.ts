@@ -3,17 +3,26 @@ import { TelegramClient } from "telegram";
 import { StringSession } from "telegram/sessions";
 import bigInt from "big-integer";
 
-const apiId = Number(process.env.TELEGRAM_API_ID);
-const apiHash = process.env.TELEGRAM_API_HASH!;
-const stringSession = new StringSession(process.env.TELEGRAM_SESSION || "");
-
 let clientInstance: TelegramClient | null = null;
 
 async function getTelegramClient() {
+  const apiId = Number(process.env.TELEGRAM_API_ID);
+  const apiHash = process.env.TELEGRAM_API_HASH || "";
+  const sessionStr = process.env.TELEGRAM_SESSION || "";
+
+  if (!apiId || !apiHash || !sessionStr) {
+    throw new Error(
+      `Telegram ENV değişkenleri eksik! API_ID: ${Boolean(apiId)}, API_HASH: ${Boolean(apiHash)}, SESSION: ${Boolean(sessionStr)}`
+    );
+  }
+
   if (!clientInstance || !clientInstance.connected) {
-    clientInstance = new TelegramClient(stringSession, apiId, apiHash, {
-      connectionRetries: 5,
-    });
+    clientInstance = new TelegramClient(
+      new StringSession(sessionStr),
+      apiId,
+      apiHash,
+      { connectionRetries: 5 }
+    );
     await clientInstance.connect();
   }
   return clientInstance;
