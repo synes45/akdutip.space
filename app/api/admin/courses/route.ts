@@ -16,7 +16,12 @@ export async function GET() {
       },
       orderBy: { createdAt: "asc" },
     });
-    return NextResponse.json(committees);
+    return NextResponse.json(committees, {
+      headers: {
+        // 60 saniye geçerliyken arka planda yenilenir (stale-while-revalidate)
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+      },
+    });
   } catch (error) {
     return NextResponse.json({ error: "Veri çekilemedi" }, { status: 500 });
   }
