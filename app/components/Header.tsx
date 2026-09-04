@@ -60,7 +60,7 @@ export default function Header() {
       <header
         className={`fixed top-0 inset-x-0 z-50 w-full transition-all duration-300 ease-in-out select-none ${
           isScrolled
-            ? "bg-zinc-950/40 backdrop-blur-xl border-b border-white/5 py-3 shadow-sm"
+            ? "bg-zinc-950/95 border-b border-white/5 py-3 shadow-sm md:bg-zinc-950/60 md:backdrop-blur-xl"
             : "bg-transparent border-b border-transparent py-4"
         }`}
       >
@@ -85,7 +85,7 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-3">
-            <button aria-label="Bildirimler" className="p-2 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60 rounded-full hidden sm:flex transition cursor-pointer backdrop-blur-sm">
+            <button aria-label="Bildirimler" className="p-2 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60 rounded-full hidden sm:flex transition-colors cursor-pointer">
               <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
@@ -96,27 +96,27 @@ export default function Header() {
             ) : user ? (
               <div className="flex items-center gap-2">
                 {user.role === "ADMIN" && (
-                  <Link href="/admin" className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold hover:bg-red-500/20 transition-all">
+                  <Link href="/admin" className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold hover:bg-red-500/20 transition-colors">
                     Admin
                   </Link>
                 )}
-                <Link href="/profil" className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-zinc-800/80 text-xs font-semibold text-zinc-200 hover:bg-zinc-800 hover:text-white transition-all backdrop-blur-sm">
+                <Link href="/profil" className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/90 border border-zinc-800/80 text-xs font-semibold text-zinc-200 hover:bg-zinc-800 hover:text-white transition-colors">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="max-w-[110px] truncate">{user.name || user.email.split("@")[0]}</span>
                 </Link>
-                <button onClick={handleLogout} title="Çıkış Yap" className="p-2 rounded-full bg-zinc-900/80 border border-zinc-800/80 text-zinc-400 hover:text-red-400 hover:border-red-500/30 transition-all cursor-pointer backdrop-blur-sm">
+                <button onClick={handleLogout} title="Çıkış Yap" className="p-2 rounded-full bg-zinc-900/90 border border-zinc-800/80 text-zinc-400 hover:text-red-400 hover:border-red-500/30 transition-colors cursor-pointer">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                   </svg>
                 </button>
               </div>
             ) : (
-              <button onClick={() => setIsAuthOpen(true)} className="px-4 py-1.5 rounded-full bg-zinc-900/80 border border-zinc-800/80 text-zinc-200 text-xs font-medium hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer backdrop-blur-sm">
+              <button onClick={() => setIsAuthOpen(true)} className="px-4 py-1.5 rounded-full bg-zinc-900/90 border border-zinc-800/80 text-zinc-200 text-xs font-medium hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer">
                 Giriş Yap
               </button>
             )}
 
-            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 md:hidden rounded-lg bg-zinc-900/80 border border-zinc-800/80 text-zinc-400 hover:text-white transition-all cursor-pointer backdrop-blur-sm" aria-label="Menüyü Aç">
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 md:hidden rounded-lg bg-zinc-900/90 border border-zinc-800/80 text-zinc-400 hover:text-white transition-colors cursor-pointer" aria-label="Menüyü Aç">
               {isMobileMenuOpen ? (
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
               ) : (
@@ -129,7 +129,7 @@ export default function Header() {
 
       {/* Mobil Menü */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden" onClick={() => setIsMobileMenuOpen(false)}>
+        <div className="fixed inset-0 z-40 bg-black/80 md:hidden" onClick={() => setIsMobileMenuOpen(false)}>
           <div className="absolute top-20 right-4 left-4 bg-zinc-950 border border-zinc-800 rounded-2xl p-5 shadow-2xl space-y-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex flex-col gap-1">
               <Link href="/" className="px-4 py-2.5 rounded-xl hover:bg-zinc-900 text-sm font-semibold text-zinc-100 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>Ana Sayfa</Link>

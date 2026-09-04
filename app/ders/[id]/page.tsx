@@ -492,7 +492,7 @@ export default function VideoPage({ params }: PageProps) {
             {/* SAYFA BAŞLIĞI VE GEZİNME */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2 border-b border-white/[0.06]">
               <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-[11px] font-medium text-amber-300 backdrop-blur-md">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-[11px] font-medium text-amber-300">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
                   <span>{currentItem.committeeTitle}</span>
                 </div>
@@ -509,7 +509,7 @@ export default function VideoPage({ params }: PageProps) {
                 {prevVideo ? (
                   <Link
                     href={`/ders/${prevVideo.id}`}
-                    className="px-4 py-2 bg-white/[0.03] hover:bg-white/[0.08] text-neutral-300 text-xs font-medium rounded-2xl border border-white/[0.08] backdrop-blur-xl transition-all flex items-center gap-1.5 active:scale-95 cursor-pointer"
+                    className="px-4 py-2 bg-white/[0.03] hover:bg-white/[0.08] text-neutral-300 text-xs font-medium rounded-2xl border border-white/[0.08] transition-colors flex items-center gap-1.5 active:scale-95 cursor-pointer"
                   >
                     <span>←</span>
                     <span>Önceki</span>
@@ -546,10 +546,10 @@ export default function VideoPage({ params }: PageProps) {
             <div className="space-y-8">
               
               {!user ? (
-                <div className="relative aspect-video w-full rounded-3xl bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] flex flex-col items-center justify-center p-8 text-center shadow-2xl overflow-hidden">
+                <div className="relative aspect-video w-full rounded-3xl bg-white/[0.02] border border-white/[0.08] flex flex-col items-center justify-center p-8 text-center shadow-2xl overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 via-transparent to-transparent pointer-events-none" />
                   
-                  <div className="w-16 h-16 bg-amber-400/10 border border-amber-400/20 rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-2xl shadow-amber-400/10 backdrop-blur-xl">
+                  <div className="w-16 h-16 bg-amber-400/10 border border-amber-400/20 rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-2xl shadow-amber-400/10">
                     <svg className="w-8 h-8 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
@@ -573,7 +573,7 @@ export default function VideoPage({ params }: PageProps) {
               ) : (
                 <div
                   ref={playerContainerRef}
-                  className="relative group bg-black rounded-3xl overflow-hidden border border-white/[0.08] shadow-2xl select-none backdrop-blur-3xl"
+                  className="relative group bg-black rounded-3xl overflow-hidden border border-white/[0.08] shadow-2xl select-none"
                 >
                   <div className="relative aspect-video w-full flex items-center justify-center bg-black">
                     <video
@@ -615,7 +615,7 @@ export default function VideoPage({ params }: PageProps) {
                     {!isPlaying && (
                       <button
                         onClick={togglePlay}
-                        className="absolute w-16 h-16 bg-amber-400 hover:bg-amber-300 text-black rounded-full flex items-center justify-center shadow-2xl backdrop-blur-xl transition-transform hover:scale-105 active:scale-95 z-20 cursor-pointer"
+                        className="absolute w-16 h-16 bg-amber-400 hover:bg-amber-300 text-black rounded-full flex items-center justify-center shadow-2xl transition-transform hover:scale-105 active:scale-95 z-20 cursor-pointer"
                       >
                         <svg className="w-6 h-6 fill-current ml-0.5" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z" />
@@ -702,13 +702,13 @@ export default function VideoPage({ params }: PageProps) {
                           <div className="relative">
                             <button
                               onClick={() => setShowSpeedMenu(!showSpeedMenu)}
-                              className="text-xs font-medium bg-white/5 border border-white/10 hover:border-white/25 text-neutral-200 px-3 py-1.5 rounded-xl backdrop-blur-xl transition-all cursor-pointer"
+                              className="text-xs font-medium bg-white/5 border border-white/10 hover:border-white/25 text-neutral-200 px-3 py-1.5 rounded-xl transition-colors cursor-pointer"
                             >
                               {playbackRate}x
                             </button>
 
                             {showSpeedMenu && (
-                              <div className="absolute right-0 bottom-11 w-28 bg-[#070709]/95 backdrop-blur-3xl border border-white/10 rounded-2xl p-1.5 shadow-2xl z-50 space-y-0.5">
+                              <div className="absolute right-0 bottom-11 w-28 bg-[#070709]/98 border border-white/10 rounded-2xl p-1.5 shadow-2xl z-50 space-y-0.5">
                                 <div className="text-[10px] font-medium text-neutral-500 px-2 py-1">
                                   Hız Seçin
                                 </div>
@@ -750,7 +750,7 @@ export default function VideoPage({ params }: PageProps) {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <button
                   onClick={toggleCompleted}
-                  className={`p-4 rounded-2xl border backdrop-blur-3xl transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 ${
+                  className={`p-4 rounded-2xl border transition-colors flex items-center justify-center gap-2 cursor-pointer active:scale-95 ${
                     isCompleted
                       ? "bg-emerald-400/10 text-emerald-300 border-emerald-400/20"
                       : "bg-white/[0.02] hover:bg-white/[0.06] text-neutral-300 border-white/[0.08]"
@@ -762,7 +762,7 @@ export default function VideoPage({ params }: PageProps) {
 
                 <button
                   onClick={togglePlaylist}
-                  className={`p-4 rounded-2xl border backdrop-blur-3xl transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 ${
+                  className={`p-4 rounded-2xl border transition-colors flex items-center justify-center gap-2 cursor-pointer active:scale-95 ${
                     isInPlaylist
                       ? "bg-amber-400/10 text-amber-300 border-amber-400/20"
                       : "bg-white/[0.02] hover:bg-white/[0.06] text-neutral-300 border-white/[0.08]"
@@ -782,7 +782,7 @@ export default function VideoPage({ params }: PageProps) {
                       alert("Bu derse ait PDF slaytı henüz yüklenmemiş.");
                     }
                   }}
-                  className="p-4 rounded-2xl border bg-white/[0.02] hover:bg-white/[0.06] text-neutral-300 border-white/[0.08] backdrop-blur-3xl transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                  className="p-4 rounded-2xl border bg-white/[0.02] hover:bg-white/[0.06] text-neutral-300 border-white/[0.08] transition-colors flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                 >
                   <span className="w-2 h-2 rounded-full bg-sky-400 shadow-sm shadow-sky-400/50" />
                   <span className="text-xs font-medium">Slayt (PDF)</span>
@@ -790,7 +790,7 @@ export default function VideoPage({ params }: PageProps) {
 
                 <button
                   onClick={() => setIsReportOpen(true)}
-                  className="p-4 rounded-2xl border bg-white/[0.02] hover:bg-white/[0.06] text-neutral-300 border-white/[0.08] backdrop-blur-3xl transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                  className="p-4 rounded-2xl border bg-white/[0.02] hover:bg-white/[0.06] text-neutral-300 border-white/[0.08] transition-colors flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                 >
                   <span className="w-2 h-2 rounded-full bg-rose-400 shadow-sm shadow-rose-400/50" />
                   <span className="text-xs font-medium">Sorun Bildir</span>
@@ -798,7 +798,7 @@ export default function VideoPage({ params }: PageProps) {
               </div>
 
               {/* NOTLAR SEKSİYONU */}
-              <div className="bg-white/[0.02] backdrop-blur-3xl border border-white/[0.08] rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
+              <div className="bg-white/[0.02] border border-white/[0.08] rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
                 <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
                   <div>
                     <h3 className="text-base font-medium text-white/95">Kişisel Ders Notları ({notes.length})</h3>
@@ -812,7 +812,7 @@ export default function VideoPage({ params }: PageProps) {
                     onChange={(e) => setNewNoteContent(e.target.value)}
                     placeholder="Bu ders için notlarınızı buraya yazın..."
                     rows={3}
-                    className="w-full bg-black/40 border border-white/[0.08] focus:border-amber-400/80 rounded-2xl p-4 text-xs text-white placeholder-neutral-500 focus:outline-none transition-all backdrop-blur-xl"
+                    className="w-full bg-black/40 border border-white/[0.08] focus:border-amber-400/80 rounded-2xl p-4 text-xs text-white placeholder-neutral-500 focus:outline-none transition-colors"
                   />
 
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -880,8 +880,8 @@ export default function VideoPage({ params }: PageProps) {
 
       {/* Sorun Bildir Modal */}
       {isReportOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl flex items-center justify-center p-4">
-          <div className="bg-[#070709] border border-white/10 rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-5 relative shadow-2xl backdrop-blur-3xl">
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+          <div className="bg-[#0c0c10] border border-white/10 rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-5 relative shadow-2xl">
             <h3 className="text-lg font-medium text-white">Videoda Sorun mu Var?</h3>
             <p className="text-xs text-neutral-400">
               Ses veya görüntü problemini açıklayın, admin paneline iletilecektir.

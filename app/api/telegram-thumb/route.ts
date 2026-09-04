@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
+// Sunucu tarafında bellek önbelleği (scraping sayısını sıfıra indirmek için)
+const thumbMemoryCache = new Map<string, string>();
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const channel = searchParams.get("channel");
@@ -15,6 +18,19 @@ export async function GET(req: NextRequest) {
     id = parts[parts.length - 1];
   }
 
+  const cacheKey = `${channel}:${id}`;
+
+  // Eğer bellekte varsa doğrudan yönlendir
+  if (thumbMemoryCache.has(cacheKey)) {
+    const targetUrl = thumbMemoryCache.get(cacheKey)!;
+    return NextResponse.redirect(targetUrl, {
+      status: 302,
+      headers: {
+        "Cache-Control": "public, max-age=604800, s-maxage=604800, immutable",
+      },
+    });
+  }
+
   try {
     const embedUrl = `https://t.me/${channel}/${id}?embed=1`;
 
@@ -23,7 +39,7 @@ export async function GET(req: NextRequest) {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
       },
-      next: { revalidate: 86400 }, // 24 saat önbellekleme yap
+      next: { revalidate: 604800 }, // 7 gün önbellek
     });
 
     if (!res.ok) {
@@ -38,7 +54,13 @@ export async function GET(req: NextRequest) {
       html.match(/tgme_widget_message_video_thumb"[^>]*style="background-image:url\('([^']+)'\)"/i);
 
     if (match && match[1]) {
-      return NextResponse.redirect(match[1]);
+      thumbMemoryCache.set(cacheKey, match[1]);
+      return NextResponse.redirect(match[1], {
+        status: 302,
+        headers: {
+          "Cache-Control": "public, max-age=604800, s-maxage=604800, immutable",
+        },
+      });
     }
 
     return NextResponse.json({ error: "Kapak görseli bulunamadı" }, { status: 404 });

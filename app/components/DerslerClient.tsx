@@ -55,7 +55,7 @@ export default function DerslerClient({ initialVideos, initialCommittees, initia
           {/* SAYFA BAŞLIĞI VE ARAMA */}
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-2 border-b border-white/[0.06]">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-[11px] font-medium text-amber-300 backdrop-blur-md">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-[11px] font-medium text-amber-300">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
                 <span>Ders Kataloğu</span>
               </div>
@@ -154,16 +154,16 @@ export default function DerslerClient({ initialVideos, initialCommittees, initia
                 <Link
                   key={video.id}
                   href={`/ders/${video.id}`}
-                  className="group bg-white/[0.03] rounded-3xl border border-white/[0.08] overflow-hidden hover:border-white/20 hover:bg-white/[0.05] transition-all duration-300 cursor-pointer flex flex-col justify-between shadow-xl relative"
+                  className="group bg-white/[0.03] rounded-3xl border border-white/[0.08] overflow-hidden hover:border-white/20 hover:bg-white/[0.05] transition-colors cursor-pointer flex flex-col justify-between shadow-xl relative [content-visibility:auto] [contain-intrinsic-size:auto_280px]"
                 >
                   {/* Thumbnail */}
                   <div className="relative aspect-video bg-black/60 flex items-center justify-center overflow-hidden border-b border-white/[0.06]">
                     <div className="absolute inset-0 bg-gradient-to-tr from-black via-neutral-950 to-amber-950/20" />
-                    <svg className="w-10 h-10 text-neutral-600 group-hover:scale-110 group-hover:text-amber-400/80 transition-all duration-500 z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.2}>
+                    <svg className="w-10 h-10 text-neutral-600 group-hover:scale-110 group-hover:text-amber-400/80 transition-transform duration-300 z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
-                      <div className="w-12 h-12 rounded-2xl bg-amber-400 text-black flex items-center justify-center shadow-lg shadow-amber-400/30 pl-0.5 transform scale-90 group-hover:scale-100 transition-all duration-300">
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center z-20">
+                      <div className="w-12 h-12 rounded-2xl bg-amber-400 text-black flex items-center justify-center shadow-lg shadow-amber-400/30 pl-0.5 transform scale-90 group-hover:scale-100 transition-transform duration-200">
                         <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                       </div>
                     </div>

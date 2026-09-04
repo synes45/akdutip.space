@@ -37,7 +37,7 @@ export default function HeroBanner({ selectedCommittee }: HeroBannerProps) {
         <div className="max-w-3xl space-y-3 text-left">
           
           {/* Üst Rozet */}
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-zinc-900/90 border border-zinc-800 text-[11px] font-medium text-amber-400 shadow-sm backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-zinc-900/90 border border-zinc-800 text-[11px] font-medium text-amber-400 shadow-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
             <span>
               {selectedCommittee ? selectedCommittee.title : "Akdeniz Tıp Ders Arşivi"}

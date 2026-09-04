@@ -5,13 +5,14 @@ import Sidebar from "./components/Sidebar";
 import CoursesTab from "./components/CoursesTab";
 import CalendarTab from "./components/CalendarTab";
 import MembersTab from "./components/MembersTab";
+import ReportsTab from "./components/ReportsTab";
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState<"courses" | "calendar" | "members">("courses");
+  const [activeTab, setActiveTab] = useState<"courses" | "calendar" | "members" | "reports">("courses");
 
   // Admin Giriş Doğrulaması
   const handleAdminLogin = (e: React.FormEvent) => {
@@ -96,6 +97,7 @@ export default function AdminPage() {
         {activeTab === "courses" && <CoursesTab />}
         {activeTab === "calendar" && <CalendarTab />}
         {activeTab === "members" && <MembersTab />}
+        {activeTab === "reports" && <ReportsTab />}
       </main>
     </div>
   );

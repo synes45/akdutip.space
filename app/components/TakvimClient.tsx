@@ -76,7 +76,7 @@ export default function TakvimClient({ initialEvents }: Props) {
             {/* BAŞLIK */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2 border-b border-white/[0.06]">
               <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-[11px] font-medium text-amber-300 backdrop-blur-md">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-[11px] font-medium text-amber-300">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
                   <span>Akademik Takvim</span>
                 </div>
