@@ -10,7 +10,7 @@ const stringSession = new StringSession(process.env.TELEGRAM_SESSION || "");
 let clientInstance: TelegramClient | null = null;
 
 async function getTelegramClient() {
-  if (!clientInstance) {
+  if (!clientInstance || !clientInstance.connected) {
     clientInstance = new TelegramClient(stringSession, apiId, apiHash, {
       connectionRetries: 5,
     });
@@ -122,8 +122,13 @@ export async function GET(request: NextRequest) {
         "Cache-Control": "no-cache, no-store, must-revalidate",
       },
     });
-  } catch (error) {
+  } catch (error: any) {
+    clientInstance = null;
     console.error("Stream hatası:", error);
-    return NextResponse.json({ error: "Yayın oluşturulamadı" }, { status: 500 });
+    const detail = error?.errorMessage || error?.message || String(error);
+    return NextResponse.json(
+      { error: "Yayın oluşturulamadı", details: detail },
+      { status: 500 }
+    );
   }
 }

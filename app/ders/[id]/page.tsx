@@ -12,7 +12,7 @@ export default async function VideoPage({ params }: PageProps) {
   const { id } = await params;
 
   // Videoyu komite ve ders bilgisiyle birlikte tek sorguda çek
-  const video = await prisma.video.findUnique({
+  let video = await prisma.video.findUnique({
     where: { id },
     include: {
       lesson: {
@@ -26,6 +26,24 @@ export default async function VideoPage({ params }: PageProps) {
       },
     },
   });
+
+  // Eğer id ile bulunamadıysa telegramId olarak da ara
+  if (!video) {
+    video = await prisma.video.findFirst({
+      where: { telegramId: id },
+      include: {
+        lesson: {
+          include: {
+            committee: true,
+            videos: {
+              orderBy: { order: "asc" },
+              select: { id: true, title: true, order: true },
+            },
+          },
+        },
+      },
+    });
+  }
 
   if (!video) {
     notFound();

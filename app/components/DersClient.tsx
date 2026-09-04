@@ -82,6 +82,17 @@ export default function DersClient({
   const speeds = [0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5];
 
   useEffect(() => {
+    if (!initialUser) {
+      fetch("/api/auth/me")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.user) setUser(data.user);
+        })
+        .catch(() => {});
+    }
+  }, [initialUser]);
+
+  useEffect(() => {
     // localStorage kontrolü
     const localSaved = localStorage.getItem(`video_progress_${video.id}`);
     if (localSaved) {
