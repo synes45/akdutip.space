@@ -47,34 +47,14 @@ export default function ProfilePage() {
   useEffect(() => {
     async function loadProfileData() {
       try {
-        const authRes = await fetch("/api/auth/me");
-        if (authRes.ok) {
-          const authData = await authRes.json();
-          setUser(authData.user);
-        }
-
-        const progressRes = await fetch("/api/user/progress");
-        if (progressRes.ok) {
-          const progressData = await progressRes.json();
-          if (Array.isArray(progressData)) {
-            setHistory(progressData);
-          }
-        }
-
-        const playlistRes = await fetch("/api/user/playlist");
-        if (playlistRes.ok) {
-          const playlistData = await playlistRes.json();
-          if (Array.isArray(playlistData)) {
-            setPlaylist(playlistData);
-          }
-        }
-
-        const notesRes = await fetch("/api/user/notes");
-        if (notesRes.ok) {
-          const notesData = await notesRes.json();
-          if (Array.isArray(notesData)) {
-            setNotes(notesData);
-          }
+        // Tek istekte tüm profil verisi — 4 sıralı isteğin yerine
+        const res = await fetch("/api/user/profile");
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user ?? null);
+          if (Array.isArray(data.history)) setHistory(data.history);
+          if (Array.isArray(data.playlist)) setPlaylist(data.playlist);
+          if (Array.isArray(data.notes)) setNotes(data.notes);
         }
       } catch (err) {
         console.error("Profil yüklenirken hata oluştu:", err);

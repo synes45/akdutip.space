@@ -7,7 +7,11 @@ export async function GET() {
     const events = await prisma.examEvent.findMany({
       orderBy: { date: "asc" },
     });
-    return NextResponse.json(events);
+    return NextResponse.json(events, {
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+      },
+    });
   } catch (error) {
     console.error("Etkinlikler alınırken hata:", error);
     return NextResponse.json({ error: "Etkinlikler alınamadı" }, { status: 500 });
