@@ -69,9 +69,16 @@ export default function VideoGrid({ selectedCommittee, selectedLesson, onSelectL
                 video.channelUsername ||
                 (selectedCommittee as any)?.telegramChannel ||
                 "donem2dersmateryal";
+              // Telegram ID temizleme (eğer URL veya path geldiyse sadece son id numarasını al)
+              let cleanId = video.telegramId ? String(video.telegramId).trim() : "";
+              if (cleanId.includes("/")) {
+                const parts = cleanId.split("/").filter(Boolean);
+                cleanId = parts[parts.length - 1];
+              }
+
               const thumbSrc = video.thumbnailUrl ||
-                (video.telegramId
-                  ? `/api/telegram-thumb?channel=${telegramChannel}&id=${video.telegramId}`
+                (cleanId
+                  ? `/api/telegram-thumb?channel=${telegramChannel}&id=${cleanId}`
                   : "");
 
               return (
@@ -95,15 +102,17 @@ export default function VideoGrid({ selectedCommittee, selectedLesson, onSelectL
                         className="absolute inset-0 w-full h-full object-cover z-10"
                       />
                     ) : thumbSrc ? (
-                      /* Next/Image ile lazy loading + önbellekleme */
-                      <Image
+                      /* Standart HTML5 img: 302 redirect ve telegram telesco.pe cdn ile tam uyumlu & hafif */
+                      <img
                         src={thumbSrc}
                         alt={video.title}
-                        fill
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
-                        className="object-cover md:transition-transform md:duration-300 md:group-hover:scale-105"
                         loading="lazy"
-                        unoptimized
+                        decoding="async"
+                        className="w-full h-full object-cover md:transition-transform md:duration-300 md:group-hover:scale-105"
+                        onError={(e) => {
+                          // Resim yüklenemezse kırık ikon yerine arka plan placeholder'ı göster
+                          (e.target as HTMLElement).style.display = "none";
+                        }}
                       />
                     ) : (
                       <div className="absolute inset-0 bg-neutral-950 flex items-center justify-center">
